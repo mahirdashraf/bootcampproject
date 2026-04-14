@@ -6,3 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
+import Combine
+import FirebaseFirestore
+import FirebaseAuth
+
+class UserViewModel: ObservableObject {
+    
+}

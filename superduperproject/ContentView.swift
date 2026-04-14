@@ -6,19 +6,39 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseAuth
+
+
 
 struct ContentView: View {
+    @EnvironmentObject var auth: AuthViewModel
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if auth.user != nil {
+                login
+            } else {
+                AuthView()
+            }
         }
+    }
+    private var login: some View {
+        VStack {
+            HStack {
+                Button("sign out") {
+                    auth.signOut()
+                }
+                Spacer()
+            }.padding(20)
+            Spacer()
+            Text("is ts working 😭😭😭😭")
+            Spacer()
+            }
         .padding()
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AuthViewModel())
 }
