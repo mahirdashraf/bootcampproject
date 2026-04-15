@@ -10,7 +10,7 @@ import Combine
 class UserViewModel: ObservableObject {
     @Published private(set) var player: PlayerModel
 
-    private let store: LocalPlayerStore
+    private var store: LocalPlayerStore?
     private var currentUserID: String?
     private let earningsEngine: EarningsEngine
     private let blindBoxService: BlindBoxService
@@ -22,12 +22,12 @@ class UserViewModel: ObservableObject {
 
     // sets up the user vm with local storage + earnings math
     init(
-        store: LocalPlayerStore = LocalPlayerStore(),
+//        store: LocalPlayerStore = LocalPlayerStore(),
         earningsEngine: EarningsEngine = EarningsEngine(),
         blindBoxService: BlindBoxService = BlindBoxService(),
         syncService: PlayerSyncServiceProtocol = NoopPlayerSyncService()
     ) {
-        self.store = store
+//        self.store = store
         self.earningsEngine = earningsEngine
         self.blindBoxService = blindBoxService
         self.syncService = syncService
@@ -46,15 +46,30 @@ class UserViewModel: ObservableObject {
     // tells the vm which authed user id to use (from auth vm)
     func setAuthenticatedUserID(_ userID: String?) {
         currentUserID = userID
-        if let userID {
-            player.id = userID
+        guard let userID else {
+            store = nil
+            currentUserID = nil
+            player = PlayerModel(
+                id: "local",
+                displayName: nil,
+                totalMoney: 0,
+                moneyPerSecond: 0,
+                lastSavedDate: Date(),
+                inventory: [],
+                unlockedWorlds: [],
+                boxesOpened: 0
+            )
+            return
         }
+        store = LocalPlayerStore(userID: userID)
+        player.id = userID
+        loadPlayerPreferCloud()
     }
-
+    
     // loads the last saved player from disk if it exists
     func loadPlayer() {
         do {
-            if let loaded = try store.load() {
+            if let loaded = try store?.load() {
                 player = loaded
             }
         } catch {
@@ -88,7 +103,7 @@ class UserViewModel: ObservableObject {
     func saveToLocal() {
         player.lastSavedDate = Date()
         do {
-            try store.save(player)
+            try store?.save(player)
         } catch {
             // ignore
         }

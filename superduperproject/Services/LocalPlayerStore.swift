@@ -16,11 +16,12 @@ final class LocalPlayerStore {
     private let fileURL: URL
 
     // points the store at a simple json file in app support
-    init(filename: String = "player.json") {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        let dir = base ?? FileManager.default.temporaryDirectory
-        self.fileURL = dir.appendingPathComponent(filename)
-    }
+    init(userID: String) {
+            let baseURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+                ?? FileManager.default.temporaryDirectory
+            let directory = baseURL.appendingPathComponent("players", isDirectory: true)
+            self.fileURL = directory.appendingPathComponent("player_\(userID).json")
+        }
 
     // reads player.json and decodes it into PlayerModel (or nil if missing)
     func load() throws -> PlayerModel? {
