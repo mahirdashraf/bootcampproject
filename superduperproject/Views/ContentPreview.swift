@@ -133,7 +133,7 @@ struct ContentPreview: View {
             id: "spiderverse_box",
             name: "Spiderverse Box",
             universe: .spiderverse,
-            cost: 5,
+            cost: 50,
             possibleDropItemIDs: ["miles", "gwen", "peter", "jessica"],
             perDropWeights: nil,
             boxImageName: "spiderverse_box"
@@ -145,7 +145,7 @@ struct ContentPreview: View {
             id: "hellokittyverse_box",
             name: "Hello Kittyverse Box",
             universe: .hellokittyverse,
-            cost: 5,
+            cost: 30,
             possibleDropItemIDs: ["keroppi", "chococat", "hellokitty", "kuromi"],
             perDropWeights: nil,
             boxImageName: "hellokittyverse_box"
@@ -157,7 +157,7 @@ struct ContentPreview: View {
             id: "marioverse_box",
             name: "Marioverse Box",
             universe: .marioverse,
-            cost: 5,
+            cost: 40,
             possibleDropItemIDs: ["peach", "mario", "luigi", "toad"],
             perDropWeights: nil,
             boxImageName: "marioverse_box"
