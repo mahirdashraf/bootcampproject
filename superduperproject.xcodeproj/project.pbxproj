@@ -23,9 +23,22 @@
 		DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DBCF96232F8F394000934FAF /* Exceptions for "superduperproject" folder in "superduperproject" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DB798B322F68C31200C1CABB /* superduperproject */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DB798B352F68C31200C1CABB /* superduperproject */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DBCF96232F8F394000934FAF /* Exceptions for "superduperproject" folder in "superduperproject" target */,
+			);
 			path = superduperproject;
 			sourceTree = "<group>";
 		};
@@ -321,6 +334,7 @@
 				DEVELOPMENT_TEAM = QXV2U3HP8N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = superduperproject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -353,6 +367,7 @@
 				DEVELOPMENT_TEAM = QXV2U3HP8N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = superduperproject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
