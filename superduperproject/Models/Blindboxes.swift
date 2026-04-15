@@ -1,18 +1,13 @@
-//
-//  Blindboxes.swift
-//
-//
-//  Created by Ashley Ni on 4/6/26.
-//
+import Foundation
 
-import SwiftUI
+struct BlindBoxModel: Identifiable, Codable, Hashable {
+    var id: String
+    var name: String
+    var universe: Universe
+    var cost: Double
 
-struct Blindboxes {
-    var title: String
-    var price: Int
-    var image: String
-    var character: Character
+    var possibleDropItemIDs: [String]
+    var perDropWeights: [String: Double]?
+
+    var boxImageName: String
 }
-
-
-

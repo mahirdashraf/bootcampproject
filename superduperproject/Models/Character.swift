@@ -4,18 +4,39 @@
 //
 //  Created by Ashley Ni on 4/6/26.
 //
+import Foundation
 
-enum Rarity {
-    case common, uncommon, rare, legendary
+enum Rarity: String, Codable, CaseIterable, Hashable {
+    case common
+    case uncommon
+    case rare
+    case legendary
+
+    var dropWeight: Double {
+        switch self {
+        case .common: return 60
+        case .uncommon: return 25
+        case .rare: return 10
+        case .legendary: return 5
+        }
+    }
 }
-enum CharacterVerse {
-    case spiderVerse, helloKitty, legoVerse
+
+enum Universe: String, Codable, CaseIterable, Hashable {
+    case spiderverse
+    case hellokittyverse
+    case marioverse
 }
 
-
-struct Item {
-    var rarity: Rarity
-    var moneyPerSecond: Double
+struct ItemModel: Identifiable, Codable, Hashable {
+    var id: String
     var name: String
-    var characterVerse: CharacterVerse
+    var rarity: Rarity
+    var universe: Universe
+
+    var baseEarningRate: Double
+    var weight: Double?
+
+    var imageName: String
+    var spriteFileName: String?
 }

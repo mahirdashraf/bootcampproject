@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseAuth
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -19,11 +20,27 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct superduperprojectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject var auth = AuthViewModel()
+    @StateObject var userVM = UserViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(auth)
+                .environmentObject(userVM)
+                .onReceive(auth.$user) { user in
+                    userVM.setAuthenticatedUserID(user?.uid)
+                }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                userVM.handleAppDidBecomeActive()
+            case .background:
+                userVM.handleAppDidEnterBackground()
+            default:
+                break
+            }
         }
     }
 }

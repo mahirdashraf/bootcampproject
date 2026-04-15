@@ -18,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		2DD1E01B2F8EDA3E005DBDC0 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
+		BC1C90C62F8F3827007839F7 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB798B332F68C31200C1CABB /* superduperproject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superduperproject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -49,6 +50,13 @@
 
 /* Begin PBXGroup section */
 		2DD1E01C2F8EDA3E005DBDC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC1C90C82F8F3827007839F7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -141,6 +149,10 @@
 			productRefGroup = DB798B342F68C31200C1CABB /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = BC1C90C82F8F3827007839F7 /* Products */;
+					ProjectRef = BC1C90C62F8F3827007839F7 /* superduperproject.xcodeproj */;
+				},
 				{
 					ProductGroup = DBCF95DE2F8EEB2500934FAF /* Products */;
 					ProjectRef = DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */;

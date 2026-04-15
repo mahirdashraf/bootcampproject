@@ -1,17 +1,19 @@
-//
-//  User.swift
-//
-//
-//  Created by Ashley Ni on 4/6/26.
-//
+import Foundation
 
-struct User {
-    var moneyBalance: Double
-    var boxesOpened: Int
-    var characters: [Character]
-    func getCharacters() -> [Character] {
-        return characters
-    }
+struct InventoryEntry: Codable, Hashable {
+    var itemID: String
+    var duplicateCount: Int
 }
 
-//testing
+struct PlayerModel: Identifiable, Codable, Hashable {
+    var id: String
+    var displayName: String?
+
+    var totalMoney: Double
+    var moneyPerSecond: Double
+    var lastSavedDate: Date
+
+    var inventory: [InventoryEntry]
+    var unlockedWorlds: [Universe]
+    var boxesOpened: Int
+}
