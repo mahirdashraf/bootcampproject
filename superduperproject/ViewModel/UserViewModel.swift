@@ -62,7 +62,7 @@ class UserViewModel: ObservableObject {
         }
     }
 
-    // tries cloud load first, falls back to local, then refreshes earnings rate
+    // tries cloud load first then falls back to local, then refreshes earnings rate
     func loadPlayerPreferCloud() {
         guard let userID = currentUserID, !userID.isEmpty else {
             loadPlayer()
@@ -211,6 +211,3 @@ class UserViewModel: ObservableObject {
         return OpenBoxResult(wonItemID: rolled.id, wonItemRarity: rolled.rarity, newBalance: player.totalMoney)
     }
 }
-
-// hey tm2 this vm only depends on PlayerSyncServiceProtocol, plug your firebase impl in at init and it should work
-// hey tm3 openbox result payload is stable: wonitemid, wonitemrarity, newbalance
