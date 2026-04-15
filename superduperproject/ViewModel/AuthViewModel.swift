@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 class AuthViewModel: ObservableObject {
-    @Published var user: User?
+    @Published var user: FirebaseAuth.User?
     private var authListener: AuthStateDidChangeListenerHandle?
     
     init() {
