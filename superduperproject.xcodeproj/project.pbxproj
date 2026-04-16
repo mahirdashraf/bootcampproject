@@ -20,6 +20,7 @@
 		2DD1E01B2F8EDA3E005DBDC0 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		BC1C90C62F8F3827007839F7 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB730FBB2F9015870091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
+		DB7310022F90405F0091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB798B332F68C31200C1CABB /* superduperproject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superduperproject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
@@ -79,6 +80,11 @@
 			sourceTree = "<group>";
 		};
 		DB730FBD2F9015870091B0A8 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB7310042F90405F0091B0A8 /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +183,10 @@
 				{
 					ProductGroup = DBCF96552F8F568F00934FAF /* Products */;
 					ProjectRef = DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */;
+				},
+				{
+					ProductGroup = DB7310042F90405F0091B0A8 /* Products */;
+					ProjectRef = DB7310022F90405F0091B0A8 /* superduperproject.xcodeproj */;
 				},
 				{
 					ProductGroup = BC1C90C82F8F3827007839F7 /* Products */;

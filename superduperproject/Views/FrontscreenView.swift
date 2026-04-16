@@ -49,9 +49,8 @@ struct FrontscreenView: View {
                     .frame(height: 60)
                     .frame(width: 375)
                     
-                    Button(action: {
-                        print("button pressed")
-                    }) {
+                    NavigationLink(destination: CharacterArchiveView(userViewModel: userViewModel))
+                    {
                         Text("CHARACTER ARCHIVES")
                             .font(.custom("PressStart2P-Regular", size: 14))
                             .frame(width: 375, height: 60)
