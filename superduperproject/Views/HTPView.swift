@@ -20,7 +20,7 @@ struct HTPView: View {
             
             ScrollView{
                 VStack(spacing: 20){
-                    guideSection(title: "1. EARNING $$", content: "Tap the big 'TAP FOR $$$ button on the front screen! Each tap adds to your balance.")
+                    guideSection(title: "1. EARNING $$", content: "Tap the big 'TAP FOR $$$' button on the front screen! Each tap adds to your balance.")
                     guideSection(title: "2. BLIND BOXES", content: "Go to the Store and spend your money on Blind Boxes to get random character drops!")
                     guideSection(title: "3. UNLOCKING", content: "Characters are unlocked via Blind Boxes. Check your 'Archives' to see who you've collected.")
                     guideSection(title: "4. WHAT IS MPS?", content: "MPS stands for 'Money Per Second.' Some characters generate money automatically even when you aren't tapping!")

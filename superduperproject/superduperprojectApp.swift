@@ -8,11 +8,11 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseAuth
+
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
-
     return true
   }
 }
@@ -29,7 +29,8 @@ struct superduperprojectApp: App {
                 .environmentObject(auth)
                 .environmentObject(userVM)
                 .onReceive(auth.$user) { user in
-                    userVM.setAuthenticatedUserID(user?.uid)
+                    let uid = user?.uid
+                    userVM.setAuthenticatedUserID(uid?.isEmpty == true ? nil : uid)
                 }
         }
         .onChange(of: scenePhase) { _, newPhase in

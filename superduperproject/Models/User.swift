@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseFirestore
 
 struct InventoryEntry: Codable, Hashable {
     var itemID: String
@@ -6,7 +7,8 @@ struct InventoryEntry: Codable, Hashable {
 }
 
 struct PlayerModel: Identifiable, Codable, Hashable {
-    var id: String
+    @DocumentID var id: String?
+
     var displayName: String?
 
     var totalMoney: Double

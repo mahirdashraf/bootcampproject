@@ -99,9 +99,11 @@ struct FrontscreenView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            userViewModel.loadPlayerPreferCloud()
-            userViewModel.recomputeMoneyPerSecond()
+            userViewModel.setItemLookup({GameCatalog.itemCatalog[$0]})
             userViewModel.startEarningLoop()
+//            userViewModel.loadPlayerPreferCloud()
+//            userViewModel.recomputeMoneyPerSecond()
+//            userViewModel.startEarningLoop()
         }
     }
 }

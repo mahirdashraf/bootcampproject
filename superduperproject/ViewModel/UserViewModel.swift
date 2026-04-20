@@ -6,6 +6,9 @@
 //
 import Foundation
 import Combine
+import FirebaseFirestore
+import Firebase
+import FirebaseAuth
 
 class UserViewModel: ObservableObject {
     @Published private(set) var player: PlayerModel
@@ -15,6 +18,9 @@ class UserViewModel: ObservableObject {
     private let earningsEngine: EarningsEngine
     private let blindBoxService: BlindBoxService
     private let syncService: PlayerSyncServiceProtocol
+    private var didLoadInitialUser = false
+    @Published var isLoading = false
+    private var previousUserID: String?
 
     private var earningTimer: Timer?
 
@@ -25,7 +31,7 @@ class UserViewModel: ObservableObject {
 //        store: LocalPlayerStore = LocalPlayerStore(),
         earningsEngine: EarningsEngine = EarningsEngine(),
         blindBoxService: BlindBoxService = BlindBoxService(),
-        syncService: PlayerSyncServiceProtocol = NoopPlayerSyncService()
+        syncService: PlayerSyncServiceProtocol = FirestorePlayerSyncService()
     ) {
 //        self.store = store
         self.earningsEngine = earningsEngine
@@ -45,7 +51,10 @@ class UserViewModel: ObservableObject {
 
     // tells the vm which authed user id to use (from auth vm)
     func setAuthenticatedUserID(_ userID: String?) {
-        currentUserID = userID
+        if userID == previousUserID {
+             return
+         }
+        previousUserID = userID
         guard let userID else {
             store = nil
             currentUserID = nil
@@ -61,9 +70,21 @@ class UserViewModel: ObservableObject {
             )
             return
         }
+        currentUserID = userID
         store = LocalPlayerStore(userID: userID)
         player.id = userID
-        loadPlayerPreferCloud()
+
+        Task {
+            await createPlayerIfNeeded(uid: userID)
+            await MainActor.run {
+                loadPlayerPreferCloud()
+            }
+        }
+        guard !didLoadInitialUser else {
+            currentUserID = userID
+            return
+        }
+        didLoadInitialUser = true
     }
     
     // loads the last saved player from disk if it exists
@@ -78,27 +99,56 @@ class UserViewModel: ObservableObject {
     }
 
     // tries cloud load first then falls back to local, then refreshes earnings rate
+//    func loadPlayerPreferCloud() async {
+//        guard let userID = currentUserID, !userID.isEmpty else {
+//            loadPlayer()
+//            recomputeMoneyPerSecond()
+//            return
+//        }
+//
+//        Task { @MainActor [weak self] in
+//            guard let self else { return }
+//            do {
+//                if let cloud = try await syncService.loadPlayer(userID: userID) {
+//                    player = cloud
+//                } else {
+//                    loadPlayer()
+//                }
+//            } catch {
+//                loadPlayer()
+//            }
+//            recomputeMoneyPerSecond()
+//        }
+//    }
     func loadPlayerPreferCloud() {
         guard let userID = currentUserID, !userID.isEmpty else {
             loadPlayer()
             recomputeMoneyPerSecond()
             return
         }
+        guard !isLoading else { return }
+        isLoading = true
 
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+
             do {
                 if let cloud = try await syncService.loadPlayer(userID: userID) {
-                    player = cloud
+                    print("loaded from cloud: money=\(cloud.totalMoney), inventory=\(cloud.inventory.count) items")
+                    self.player = cloud
                 } else {
-                    loadPlayer()
-                }
-            } catch {
-                loadPlayer()
+                    print("no cloud document found, falling back to local")
+                    self.loadPlayer()
+                }            } catch {
+                self.loadPlayer()
             }
-            recomputeMoneyPerSecond()
+
+            self.recomputeMoneyPerSecond()
+            self.applyOfflineEarnings()
+            self.startEarningLoop()
+            self.isLoading = false
         }
     }
-
     // saves the current player to disk (and stamps lastSavedDate)
     func saveToLocal() {
         player.lastSavedDate = Date()
@@ -111,12 +161,20 @@ class UserViewModel: ObservableObject {
 
     // sends the current player to cloud (best effort)
     func saveToCloud() {
-        Task {
-            do { try await syncService.savePlayer(player) } catch {}
+        print("saveToCloud called, playerID: \(player.id ?? "nil"), isLoading: \(isLoading)")
+        guard !isLoading else {
+            print("saveToCloud blocked by isLoading")
+            return
         }
-    }
-
-    // applies earnings since the last save (for when the app was closed)
+        Task {
+            do {
+                try await syncService.savePlayer(player)
+                print("saveToCloud succeeded")
+            } catch {
+                print("saveToCloud failed:", error)
+            }
+        }
+    }    // applies earnings since the last save (for when the app was closed)
     func applyOfflineEarnings(now: Date = Date()) {
         let elapsed = max(0, now.timeIntervalSince(player.lastSavedDate))
         let earned = elapsed * player.moneyPerSecond
@@ -148,16 +206,16 @@ class UserViewModel: ObservableObject {
 
     // lifecycle hook: load -> recompute rate -> offline earnings -> start timer
     func handleAppDidBecomeActive() {
-        loadPlayerPreferCloud()
-        applyOfflineEarnings()
-        startEarningLoop()
-    }
+            if currentUserID != nil && !isLoading {
+                applyOfflineEarnings()
+            }
+            startEarningLoop()
+        }
 
     // lifecycle hook: stop timer then save
     func handleAppDidEnterBackground() {
         stopEarningLoop()
-        saveToLocal()
-        saveToCloud()
+        updateAndSync()
     }
 
     // lets whoever owns the item catalog plug in a lookup by id
@@ -177,6 +235,9 @@ class UserViewModel: ObservableObject {
         earningTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self else { return }
             self.player.totalMoney += self.player.moneyPerSecond
+            if Int.random(in: 0..<10) == 0 {
+                self.updateAndSync()
+            }
         }
     }
 
@@ -220,9 +281,36 @@ class UserViewModel: ObservableObject {
         }
 
         recomputeMoneyPerSecond()
-        saveToLocal()
-        saveToCloud()
+        updateAndSync()
 
         return OpenBoxResult(wonItemID: rolled.id, wonItemRarity: rolled.rarity, newBalance: player.totalMoney)
+    }
+    func createPlayerIfNeeded(uid: String) async {
+        let docRef = Firestore.firestore().collection("users").document(uid)
+
+        do {
+            let snapshot = try await docRef.getDocument()
+
+            if !snapshot.exists {
+                let newPlayer = PlayerModel(
+                    id: uid,
+                    displayName: nil,
+                    totalMoney: 0,
+                    moneyPerSecond: 0,
+                    lastSavedDate: Date(),
+                    inventory: [],
+                    unlockedWorlds: [],
+                    boxesOpened: 0
+                )
+
+                try docRef.setData(from: newPlayer)
+            }
+        } catch {
+            print("Failed to create player:", error)
+        }
+    }
+    func updateAndSync() {
+        saveToLocal()
+        saveToCloud()
     }
 }
