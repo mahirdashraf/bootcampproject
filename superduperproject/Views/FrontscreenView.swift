@@ -64,10 +64,9 @@ struct FrontscreenView: View {
                 }
                 
                 HStack(spacing: 20){
-                    Button(action: {
-                        print("button pressed")
-                        //should replace this with game screen button
-                    }) {
+                    NavigationLink {
+                        FullGameView(userViewModel: userViewModel)
+                    } label: {
                         Text("TAP TO\nEARN MONEY")
                             .font(.custom("PressStart2P-Regular", size: 12))
                             .multilineTextAlignment(.center)
@@ -75,7 +74,6 @@ struct FrontscreenView: View {
                             .background(Color(red: 0.6, green: 1.0, blue: 0.6))
                             .foregroundColor(.black)
                     }
-                    
                     NavigationLink(destination: StoreView(userViewModel: userViewModel))
                     {
                         Text("STORE")
@@ -133,14 +131,11 @@ struct FrontscreenView: View {
         .onAppear {
             userViewModel.setItemLookup({GameCatalog.itemCatalog[$0]})
             userViewModel.startEarningLoop()
-//            userViewModel.loadPlayerPreferCloud()
-//            userViewModel.recomputeMoneyPerSecond()
-//            userViewModel.startEarningLoop()
         }
     }
 }
 
     
-    #Preview {
-        FrontscreenView(userViewModel: UserViewModel())
-    }
+#Preview {
+    FrontscreenView(userViewModel: UserViewModel())
+}

@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 
 class UserViewModel: ObservableObject {
-    @Published private(set) var player: PlayerModel
+    @Published var player: PlayerModel
 
     private var store: LocalPlayerStore?
     private var currentUserID: String?
@@ -20,6 +20,8 @@ class UserViewModel: ObservableObject {
     private let syncService: PlayerSyncServiceProtocol
     private var didLoadInitialUser = false
     @Published var isLoading = false
+    private var isSyncing = false
+    private var listener: ListenerRegistration?
     private var previousUserID: String?
 
     private var earningTimer: Timer?
@@ -73,6 +75,7 @@ class UserViewModel: ObservableObject {
         currentUserID = userID
         store = LocalPlayerStore(userID: userID)
         player.id = userID
+        self.listenToPlayer()
 
         Task {
             await createPlayerIfNeeded(uid: userID)
@@ -302,7 +305,6 @@ class UserViewModel: ObservableObject {
                     unlockedWorlds: [],
                     boxesOpened: 0
                 )
-
                 try docRef.setData(from: newPlayer)
             }
         } catch {
@@ -310,7 +312,42 @@ class UserViewModel: ObservableObject {
         }
     }
     func updateAndSync() {
+        guard !isSyncing else { return }
+        isSyncing = true
+        player.lastSavedDate = Date()
         saveToLocal()
-        saveToCloud()
+        Task {
+            do {
+                try await syncService.savePlayer(player)
+            } catch {
+                print("Firestore save failed:", error)
+            }
+            await MainActor.run {
+                self.isSyncing = false
+            }
+        }
+    }
+    @MainActor
+    func addMoneyFromGame(_ amount: Double) {
+        player.totalMoney += amount
+        player.lastSavedDate = Date()
+        updateAndSync()
+    }
+    func listenToPlayer() {
+        guard let userID = currentUserID else { return }
+        listener?.remove()
+        listener = Firestore.firestore()
+            .collection("users")
+            .document(userID)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self,
+                      let data = try? snapshot?.data(as: PlayerModel.self),
+                      error == nil else { return }
+                DispatchQueue.main.async {
+                    if data.totalMoney >= self.player.totalMoney {
+                        self.player = data
+                    }
+                }
+            }
     }
 }
