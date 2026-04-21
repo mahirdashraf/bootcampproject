@@ -68,9 +68,7 @@ struct StoreView: View {
                 .padding()
             }
             
-            Button(action: {
-                print("button pressed")
-            }) {
+            NavigationLink(destination: CharacterArchiveView(userViewModel: userViewModel)) {
                 Text("CHARACTER ARCHIVES")
                     .font(.custom("PressStart2P-Regular", size: 14))
                     .frame(maxWidth: .infinity)
