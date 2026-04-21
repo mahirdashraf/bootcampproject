@@ -24,7 +24,7 @@ struct GameCatalog {
             cost: 50,
             possibleDropItemIDs: ["miles", "gwen", "peter", "jessica"],
             perDropWeights: nil,
-            boxImageName: "spiderverse_box"
+            boxImageName: "spidermanbox"
         ),
         BlindBoxModel(
             id: "hellokittyverse_box",
@@ -33,7 +33,7 @@ struct GameCatalog {
             cost: 30,
             possibleDropItemIDs: ["keroppi", "chococat", "hellokitty", "kuromi"],
             perDropWeights: nil,
-            boxImageName: "hellokittyverse_box"
+            boxImageName: "hellokittybox"
         ),
         BlindBoxModel(
             id: "marioverse_box",
@@ -42,7 +42,7 @@ struct GameCatalog {
             cost: 40,
             possibleDropItemIDs: ["peach", "mario", "luigi", "toad"],
             perDropWeights: nil,
-            boxImageName: "marioverse_box"
+            boxImageName: "mariobox"
         )
     ]
 }

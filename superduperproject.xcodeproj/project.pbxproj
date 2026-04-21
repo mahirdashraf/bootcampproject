@@ -24,6 +24,7 @@
 		DB730FBB2F9015870091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB7310022F90405F0091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB798B332F68C31200C1CABB /* superduperproject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superduperproject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB9989742F97060300B6970E /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,6 +122,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DB9989762F97060300B6970E /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DBCF95DE2F8EEB2500934FAF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,12 +208,16 @@
 					ProjectRef = DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */;
 				},
 				{
-					ProductGroup = 2DD1E01C2F8EDA3E005DBDC0 /* Products */;
-					ProjectRef = 2DD1E01B2F8EDA3E005DBDC0 /* superduperproject.xcodeproj */;
+					ProductGroup = DBCF95DE2F8EEB2500934FAF /* Products */;
+					ProjectRef = DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */;
 				},
 				{
 					ProductGroup = BC1C90C82F8F3827007839F7 /* Products */;
 					ProjectRef = BC1C90C62F8F3827007839F7 /* superduperproject.xcodeproj */;
+				},
+				{
+					ProductGroup = DB9989762F97060300B6970E /* Products */;
+					ProjectRef = DB9989742F97060300B6970E /* superduperproject.xcodeproj */;
 				},
 				{
 					ProductGroup = 2D8FE08E2F95A7CA0051AC16 /* Products */;
@@ -222,8 +232,8 @@
 					ProjectRef = DB730FBB2F9015870091B0A8 /* superduperproject.xcodeproj */;
 				},
 				{
-					ProductGroup = DBCF95DE2F8EEB2500934FAF /* Products */;
-					ProjectRef = DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */;
+					ProductGroup = 2DD1E01C2F8EDA3E005DBDC0 /* Products */;
+					ProjectRef = 2DD1E01B2F8EDA3E005DBDC0 /* superduperproject.xcodeproj */;
 				},
 			);
 			projectRoot = "";

@@ -25,10 +25,11 @@ struct StoreView: View {
                 HStack(spacing: 15) {
                     ForEach(blindBoxes, id: \.id) { box in
                         VStack(spacing: 10) {
-                            Image(systemName: "box.2")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
+                            Image(box.boxImageName)
+                                .resizable()
+                                .scaledToFill()
                                 .frame(width: 120, height: 120)
+                                .clipped()
                                 .background(Color(red: 0.3, green: 0.3, blue: 0.5))
                                 .cornerRadius(8)
                             
@@ -116,6 +117,20 @@ struct StoreView: View {
             .padding()
             .background(Color.black.opacity(0.8))
             .cornerRadius(8)
+            .padding(.horizontal)
+
+            Button(action: {
+                userViewModel.addMoney(20.0)
+                userViewModel.saveToLocal()
+            }) {
+                Text("TAP FOR MONEY")
+                    .font(.custom("PressStart2P-Regular", size: 12))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 45)
+                    .background(Color(red: 0.6, green: 1.0, blue: 0.6))
+                    .foregroundColor(.black)
+                    .cornerRadius(8)
+            }
             .padding(.horizontal)
             
             Spacer()
