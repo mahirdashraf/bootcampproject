@@ -20,6 +20,8 @@ class UserViewModel: ObservableObject {
     private let syncService: PlayerSyncServiceProtocol
     private var didLoadInitialUser = false
     @Published var isLoading = false
+    @Published private(set) var pendingOfflineEarnings: Double = 0
+    private var didShowOfflineWelcomeForCurrentLogin = false
     private var isSyncing = false
     private var listener: ListenerRegistration?
     private var previousUserID: String?
@@ -61,6 +63,8 @@ class UserViewModel: ObservableObject {
         guard let userID else {
             store = nil
             currentUserID = nil
+            pendingOfflineEarnings = 0
+            didShowOfflineWelcomeForCurrentLogin = false
             player = PlayerModel(
                 id: "local",
                 displayName: nil,
@@ -75,6 +79,7 @@ class UserViewModel: ObservableObject {
             return
         }
         currentUserID = userID
+        didShowOfflineWelcomeForCurrentLogin = false
         store = LocalPlayerStore(userID: userID)
         player.id = userID
         self.listenToPlayer()
@@ -185,8 +190,24 @@ class UserViewModel: ObservableObject {
         let earned = elapsed * player.moneyPerSecond
         if earned > 0 {
             player.totalMoney += earned
+            pendingOfflineEarnings += earned
         }
         player.lastSavedDate = now
+    }
+
+    func consumePendingOfflineEarnings() -> Double {
+        let earned = pendingOfflineEarnings
+        pendingOfflineEarnings = 0
+        return earned
+    }
+
+    func takeOfflineEarningsForWelcomeIfNeeded() -> Double? {
+        guard !didShowOfflineWelcomeForCurrentLogin else { return nil }
+        didShowOfflineWelcomeForCurrentLogin = true
+
+        let earned = consumePendingOfflineEarnings()
+        guard earned > 0 else { return nil }
+        return earned
     }
 
     // adds money directly (useful for preview/demo controls)

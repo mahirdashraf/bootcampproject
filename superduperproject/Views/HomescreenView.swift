@@ -10,6 +10,9 @@ import SwiftUI
 struct HomescreenView: View {
     @ObservedObject var userViewModel: UserViewModel
     @EnvironmentObject var auth: AuthViewModel
+    @State private var goToFrontscreen = false
+    @State private var showOfflineWelcome = false
+    @State private var offlineEarnings = 0.0
     
     var body: some View {
         NavigationStack{
@@ -27,7 +30,14 @@ struct HomescreenView: View {
                         .foregroundColor(.white)
                         .padding(.bottom, 20)
                     
-                    NavigationLink(destination: FrontscreenView(userViewModel: userViewModel)){
+                    Button(action: {
+                        if let earned = userViewModel.takeOfflineEarningsForWelcomeIfNeeded() {
+                            offlineEarnings = earned
+                            showOfflineWelcome = true
+                        } else {
+                            goToFrontscreen = true
+                        }
+                    }) {
                         Text("PLAY")
                             .font(.custom("PressStart2P-Regular", size: 20))
                             .frame(width: 200, height: 80)
@@ -57,6 +67,63 @@ struct HomescreenView: View {
                     Spacer()
                 }.padding()
             }
+            .fullScreenCover(isPresented: $showOfflineWelcome) {
+                OfflineEarningsView(earnedMoney: offlineEarnings) {
+                    showOfflineWelcome = false
+                    goToFrontscreen = true
+                }
+            }
+            .navigationDestination(isPresented: $goToFrontscreen) {
+                FrontscreenView(userViewModel: userViewModel)
+            }
+        }
+    }
+}
+
+private struct OfflineEarningsView: View {
+    let earnedMoney: Double
+    let onContinue: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.9).ignoresSafeArea()
+
+            VStack(spacing: 18) {
+                Text("WELCOME BACK")
+                    .font(.custom("PressStart2P-Regular", size: 20))
+                    .foregroundColor(.white)
+
+                Text("While you were gone, your multiverse friends made")
+                    .font(.custom("PressStart2P-Regular", size: 10))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 10)
+
+                Text("$\(Int(earnedMoney))")
+                    .font(.custom("PressStart2P-Regular", size: 24))
+                    .foregroundColor(Color(red: 0.6, green: 1.0, blue: 0.6))
+
+                Button("CONTINUE") {
+                    onContinue()
+                }
+                .font(.custom("PressStart2P-Regular", size: 12))
+                .padding(.horizontal, 22)
+                .padding(.vertical, 12)
+                .background(Color(red: 1.0, green: 0.6, blue: 0.6))
+                .foregroundColor(.black)
+                .cornerRadius(8)
+            }
+            .padding(24)
+            .frame(maxWidth: 360)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.black.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                    )
+            )
+            .padding(.horizontal, 20)
         }
     }
 }
