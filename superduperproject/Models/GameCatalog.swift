@@ -33,7 +33,7 @@ struct GameCatalog {
             cost: 30,
             possibleDropItemIDs: ["keroppi", "chococat", "hellokitty", "kuromi"],
             perDropWeights: nil,
-            boxImageName: "hellokittybox"
+            boxImageName: "hkbox"
         ),
         BlindBoxModel(
             id: "marioverse_box",

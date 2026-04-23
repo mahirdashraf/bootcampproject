@@ -25,6 +25,7 @@
 		DB730FBB2F9015870091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB7310022F90405F0091B0A8 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB798B332F68C31200C1CABB /* superduperproject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superduperproject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB8F564E2F99B3B800B62A71 /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DB9989742F97060300B6970E /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DBCF95DC2F8EEB2500934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
 		DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = superduperproject.xcodeproj; sourceTree = "<group>"; };
@@ -128,6 +129,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DB8F56502F99B3B800B62A71 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DB9989762F97060300B6970E /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
@@ -228,6 +234,10 @@
 				{
 					ProductGroup = DBCF96552F8F568F00934FAF /* Products */;
 					ProjectRef = DBCF96532F8F568F00934FAF /* superduperproject.xcodeproj */;
+				},
+				{
+					ProductGroup = DB8F56502F99B3B800B62A71 /* Products */;
+					ProjectRef = DB8F564E2F99B3B800B62A71 /* superduperproject.xcodeproj */;
 				},
 				{
 					ProductGroup = 2D8FE08E2F95A7CA0051AC16 /* Products */;
