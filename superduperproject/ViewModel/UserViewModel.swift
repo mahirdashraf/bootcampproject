@@ -47,7 +47,8 @@ class UserViewModel: ObservableObject {
             lastSavedDate: Date(),
             inventory: [],
             unlockedWorlds: [],
-            boxesOpened: 0
+            boxesOpened: 0,
+            equippedCharacters: []
         )
     }
 
@@ -68,7 +69,8 @@ class UserViewModel: ObservableObject {
                 lastSavedDate: Date(),
                 inventory: [],
                 unlockedWorlds: [],
-                boxesOpened: 0
+                boxesOpened: 0,
+                equippedCharacters: []
             )
             return
         }
@@ -227,9 +229,33 @@ class UserViewModel: ObservableObject {
         recomputeMoneyPerSecond()
     }
 
-    // recomputes moneyPerSecond from the current inventory
+    // recomputes moneyPerSecond from the currently equipped characters (ignoring duplicates)
     func recomputeMoneyPerSecond() {
-        player.moneyPerSecond = earningsEngine.moneyPerSecond(inventory: player.inventory, itemLookup: itemLookup)
+        let equippedInventory = player.equippedCharacters.map {
+            InventoryEntry(itemID: $0, duplicateCount: 0)
+        }
+        player.moneyPerSecond = earningsEngine.moneyPerSecond(inventory: equippedInventory, itemLookup: itemLookup)
+    }
+    
+    // equips a character (optionally swapping out an existing one)
+    func equipCharacter(_ id: String, replacing swappedId: String? = nil) {
+        guard !player.equippedCharacters.contains(id) else { return }
+        
+        if let swappedId = swappedId, let idx = player.equippedCharacters.firstIndex(of: swappedId) {
+            player.equippedCharacters[idx] = id
+        } else if player.equippedCharacters.count < 3 {
+            player.equippedCharacters.append(id)
+        }
+        
+        recomputeMoneyPerSecond()
+        updateAndSync()
+    }
+    
+    // unequips a character
+    func unequipCharacter(_ id: String) {
+        player.equippedCharacters.removeAll(where: { $0 == id })
+        recomputeMoneyPerSecond()
+        updateAndSync()
     }
 
     // starts the 1s earning timer (no-op if already running)
@@ -303,7 +329,8 @@ class UserViewModel: ObservableObject {
                     lastSavedDate: Date(),
                     inventory: [],
                     unlockedWorlds: [],
-                    boxesOpened: 0
+                    boxesOpened: 0,
+                    equippedCharacters: []
                 )
                 try docRef.setData(from: newPlayer)
             }

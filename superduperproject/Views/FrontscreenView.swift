@@ -91,18 +91,38 @@ struct FrontscreenView: View {
                         .foregroundColor(.white)
                     
                     HStack(spacing: 10) {
-                        ForEach(equippedCharacterPlaceholders, id: \.self) { slot in
+                        ForEach(0..<3, id: \.self) { i in
                             VStack(spacing: 6) {
-                                RoundedRectangle(cornerRadius: 0)
-                                    .fill(Color.white.opacity(0.2))
+                                if i < userViewModel.player.equippedCharacters.count,
+                                   let character = GameCatalog.itemCatalog[userViewModel.player.equippedCharacters[i]] {
+                                    
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 0)
+                                            .fill(Color.white.opacity(0.2))
+                                        Image(character.imageName)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .padding(5)
+                                    }
                                     .frame(width: 90, height: 90)
-                                    .overlay(
-                                        Image(systemName: "person.fill")
-                                            .foregroundColor(.white)
-                                    )
-                                Text(slot)
-                                    .font(.custom("PressStart2P-Regular", size: 7))
-                                    .foregroundColor(.white)
+                                    
+                                    Text(character.name.uppercased())
+                                        .font(.custom("PressStart2P-Regular", size: 7))
+                                        .foregroundColor(.white)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                } else {
+                                    RoundedRectangle(cornerRadius: 0)
+                                        .fill(Color.white.opacity(0.2))
+                                        .frame(width: 90, height: 90)
+                                        .overlay(
+                                            Image(systemName: "person.fill")
+                                                .foregroundColor(.white)
+                                        )
+                                    Text("SLOT \(i + 1)")
+                                        .font(.custom("PressStart2P-Regular", size: 7))
+                                        .foregroundColor(.white)
+                                }
                             }
                             .frame(maxWidth: .infinity)
                         }
