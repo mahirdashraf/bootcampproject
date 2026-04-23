@@ -4,15 +4,13 @@
 //
 //  Created by Ashley Ni on 4/15/26.
 //
-
 import SwiftUI
-
 struct StoreView: View {
     @ObservedObject var userViewModel: UserViewModel
     @Environment(\.dismiss) var dismiss
     
-    @State private var showResult = false
-    @State private var errorMessage: String?
+    @State private var showInsufficientFundsPopup = false
+    @State private var insufficientFundsMessage = ""
     @State private var showUnboxAnimation = false
     @State private var selectedBoxImageName = ""
     @State private var selectedCharacterImageName = ""
@@ -47,7 +45,6 @@ struct StoreView: View {
                                 Text("$\(Int(box.cost))")
                                     .font(.custom("PressStart2P-Regular", size: 12))
                                     .foregroundColor(.white)
-
                                 Button(action: {
                                     selectedDetailsBox = box
                                 }) {
@@ -70,11 +67,10 @@ struct StoreView: View {
                                         selectedRarityText = result.wonItemRarity.rawValue.uppercased()
                                         selectedMpsText = character.map { String(format: "%.1f", $0.baseEarningRate) } ?? "0"
                                         showUnboxAnimation = true
-                                        errorMessage = nil
-                                        showResult = false
+                                        showInsufficientFundsPopup = false
                                     } catch {
-                                        errorMessage = "Not enough money! Need $\(Int(box.cost))"
-                                        showResult = true
+                                        insufficientFundsMessage = "You need $\(Int(box.cost)) for this box."
+                                        showInsufficientFundsPopup = true
                                     }
                                 }) {
                                     Text("BUY")
@@ -179,26 +175,16 @@ struct StoreView: View {
             .onAppear {
                 userViewModel.setItemLookup { GameCatalog.itemCatalog[$0] }
             }
-            .alert("Error", isPresented: $showResult) {
-                Button("OK") {
-                    showResult = false
-                    errorMessage = nil
-                }
-            } message: {
-                Text(errorMessage ?? "")
-            }
             .sheet(item: $selectedDetailsBox) { box in
                 BlindBoxDetailsPopup(
                     boxName: box.name,
                     drops: dropDetails(for: box)
                 )
             }
-
             if showUnboxAnimation {
                 Color.black.opacity(0.82)
                     .ignoresSafeArea()
                     .transition(.opacity)
-
                 UnboxAnimationView(
                     boxImageName: selectedBoxImageName,
                     characterImageName: selectedCharacterImageName,
@@ -211,22 +197,56 @@ struct StoreView: View {
                 .transition(.opacity)
                 .zIndex(1)
             }
+            if showInsufficientFundsPopup {
+                Color.black.opacity(0.72)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                VStack(spacing: 14) {
+                    Image("sadkitty")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 120, height: 120)
+                    Text(insufficientFundsMessage)
+                        .font(.custom("PressStart2P-Regular", size: 10))
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                    Button("OK") {
+                        showInsufficientFundsPopup = false
+                    }
+                    .font(.custom("PressStart2P-Regular", size: 10))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color(red: 1.0, green: 0.6, blue: 0.6))
+                    .foregroundColor(.black)
+                    .cornerRadius(8)
+                }
+                .padding(18)
+                .frame(maxWidth: 280)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(Color.black.opacity(0.2), lineWidth: 1)
+                        )
+                )
+                .zIndex(2)
+                .transition(.scale(scale: 0.9).combined(with: .opacity))
+            }
         }
         .animation(.easeInOut(duration: 0.2), value: showUnboxAnimation)
+        .animation(.easeInOut(duration: 0.2), value: showInsufficientFundsPopup)
     }
-
     private func dropDetails(for box: BlindBoxModel) -> [DropDetail] {
         let pool = box.possibleDropItemIDs.compactMap { GameCatalog.itemCatalog[$0] }
         guard !pool.isEmpty else { return [] }
-
         let weights: [Double] = pool.map { item in
             if let w = box.perDropWeights?[item.id] { return max(0, w) }
             return item.weight ?? item.rarity.dropWeight
         }
-
         let total = weights.reduce(0, +)
         let safeTotal = total > 0 ? total : Double(pool.count)
-
         return pool.enumerated().map { index, item in
             let chance: Double
             if total > 0 {
@@ -243,19 +263,16 @@ struct StoreView: View {
         }
     }
 }
-
 private struct DropDetail: Identifiable {
     let id: String
     let name: String
     let rarity: String
     let percentageText: String
 }
-
 private struct BlindBoxDetailsPopup: View {
     let boxName: String
     let drops: [DropDetail]
     @Environment(\.dismiss) private var dismiss
-
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
@@ -263,7 +280,6 @@ private struct BlindBoxDetailsPopup: View {
                     .font(.custom("PressStart2P-Regular", size: 12))
                     .foregroundColor(.white)
                     .padding(.top, 8)
-
                 if drops.isEmpty {
                     Text("No characters available.")
                         .foregroundColor(.white)
@@ -294,7 +310,6 @@ private struct BlindBoxDetailsPopup: View {
                         .padding(.horizontal)
                     }
                 }
-
                 Button("CLOSE") {
                     dismiss()
                 }
@@ -319,7 +334,6 @@ private struct BlindBoxDetailsPopup: View {
             }
         }
     }
-
     private func rarityColor(for rarity: String) -> Color {
         switch rarity.lowercased() {
         case "common":
@@ -335,7 +349,8 @@ private struct BlindBoxDetailsPopup: View {
         }
     }
 }
-
 #Preview {
     StoreView(userViewModel: UserViewModel())
 }
+
+
