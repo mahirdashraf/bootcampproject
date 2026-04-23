@@ -176,7 +176,7 @@ struct StoreView: View {
             }
 
             if showUnboxAnimation {
-                Color.black.opacity(0.62)
+                Color.black.opacity(0.82)
                     .ignoresSafeArea()
                     .transition(.opacity)
 

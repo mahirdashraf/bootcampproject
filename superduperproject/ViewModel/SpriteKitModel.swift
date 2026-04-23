@@ -12,6 +12,8 @@ final class UnboxScene: SKScene {
     private let boxClosed: SKSpriteNode
     private let boxOpen: SKSpriteNode
     private let character: SKSpriteNode
+    private let characterGlow: SKSpriteNode
+    private let characterGlowColor: SKColor
     private let onFinished: () -> Void
     private let tapSoundFileName: String?
     private let revealSoundFileName: String?
@@ -25,11 +27,15 @@ final class UnboxScene: SKScene {
         size: CGSize,
         boxImageName: String,
         characterImageName: String,
+        characterGlowColor: SKColor,
         onFinished: @escaping () -> Void
     ){
         self.boxClosed = SKSpriteNode(imageNamed: boxImageName)
         self.boxOpen = SKSpriteNode(imageNamed: boxImageName)
         self.character = SKSpriteNode(imageNamed: characterImageName)
+        self.characterGlow = SKSpriteNode(texture: self.character.texture)
+        self.characterGlow.size = self.character.size
+        self.characterGlowColor = characterGlowColor
         self.tapSoundFileName = UnboxScene.availableSoundFile(
             ["unbox-tap.wav", "tap.wav", "box_tap.wav", "click.wav", "tap.mp3"]
         )
@@ -56,6 +62,7 @@ final class UnboxScene: SKScene {
         if character.size.width > 0 {
             let characterScale = (size.width * 0.45) / character.size.width
             character.setScale(characterScale)
+            characterGlow.setScale(characterScale * 1.12)
         }
 
         boxContainer.position = center
@@ -68,9 +75,17 @@ final class UnboxScene: SKScene {
 
         character.position = CGPoint(x: center.x, y: center.y - boxClosed.size.height * 0.2)
         character.alpha = 0
+        characterGlow.position = character.position
+        characterGlow.alpha = 0
+        characterGlow.color = characterGlowColor
+        characterGlow.colorBlendFactor = 1
+        characterGlow.blendMode = .add
+        characterGlow.zPosition = character.zPosition - 1
+
         addChild(boxContainer)
         boxContainer.addChild(boxClosed)
         boxContainer.addChild(boxOpen)
+        addChild(characterGlow)
         addChild(character)
         addChild(sparkleLayer)
         sparkleLayer.zPosition = 8
@@ -152,6 +167,15 @@ final class UnboxScene: SKScene {
             .moveBy(x: 0, y: 180, duration: 0.35),
             .fadeIn(withDuration: 0.2)
         ])
+        let glowPopIn = SKAction.sequence([
+            .fadeAlpha(to: 0.4, duration: 0.25),
+            .repeatForever(
+                .sequence([
+                    .fadeAlpha(to: 0.65, duration: 0.35),
+                    .fadeAlpha(to: 0.35, duration: 0.35)
+                ])
+            )
+        ])
         let done = SKAction.run {
             self.isAnimatingTap = false
             self.onFinished()
@@ -169,6 +193,10 @@ final class UnboxScene: SKScene {
             .wait(forDuration: 0.05),
             .run {
                 self.character.run(popOut)
+                self.characterGlow.run(.group([
+                    .moveBy(x: 0, y: 180, duration: 0.35),
+                    glowPopIn
+                ]))
             },
             .wait(forDuration: 0.45),
             done

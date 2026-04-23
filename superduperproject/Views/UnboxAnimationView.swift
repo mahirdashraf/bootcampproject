@@ -18,6 +18,23 @@ struct UnboxAnimationView: View {
 
     @State private var scene: UnboxScene?
     @State private var showDetails = false
+
+    private var glowColor: SKColor {
+        let rarity = rarityText.lowercased()
+        if rarity.contains("uncommon") {
+            return .systemBlue
+        }
+        if rarity.contains("common") {
+            return .white
+        }
+        if rarity.contains("rare") {
+            return .systemYellow
+        }
+        if rarity.contains("legend") {
+            return .systemRed
+        }
+        return .white
+    }
     
     var body: some View {
         GeometryReader { geo in
@@ -77,7 +94,8 @@ struct UnboxAnimationView: View {
                 scene = UnboxScene(
                     size: geo.size,
                     boxImageName: boxImageName,
-                    characterImageName: characterImageName
+                    characterImageName: characterImageName,
+                    characterGlowColor: glowColor
                 ) {
                     showDetails = true
                 }
