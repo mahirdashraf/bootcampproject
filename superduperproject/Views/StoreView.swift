@@ -144,19 +144,19 @@ struct StoreView: View {
                 .cornerRadius(8)
                 .padding(.horizontal)
     
-                Button(action: {
-                    userViewModel.addMoney(20.0)
-                    userViewModel.saveToLocal()
-                }) {
-                    Text("TAP FOR MONEY")
-                        .font(.custom("PressStart2P-Regular", size: 12))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 45)
-                        .background(Color(red: 0.6, green: 1.0, blue: 0.6))
-                        .foregroundColor(.black)
-                        .cornerRadius(8)
-                }
-                .padding(.horizontal)
+//                Button(action: {
+//                    userViewModel.addMoney(20.0)
+//                    userViewModel.saveToLocal()
+//                }) {
+//                    Text("TAP FOR MONEY")
+//                        .font(.custom("PressStart2P-Regular", size: 12))
+//                        .frame(maxWidth: .infinity)
+//                        .frame(height: 45)
+//                        .background(Color(red: 0.6, green: 1.0, blue: 0.6))
+//                        .foregroundColor(.black)
+//                        .cornerRadius(8)
+//                }
+//                .padding(.horizontal)
                 
                 Spacer()
                 

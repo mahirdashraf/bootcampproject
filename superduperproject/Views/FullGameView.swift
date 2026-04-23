@@ -28,8 +28,13 @@ struct FullGameView: View {
                         NavigationLink {
                             FlappyBirdView(userViewModel: userViewModel)
                         } label: {
-                            GameTile(title: "FLAPPY BIRD")
+                            GameTile(title: "FLAPPY BIRD", color: Color(red: 1.0, green: 0.65, blue: 0.75))
                         }
+                        NavigationLink {
+                                DinoGameView(userViewModel: userViewModel)
+                            } label: {
+                                GameTile(title: "DINO RUN", color: Color(red: 0.35, green: 0.75, blue: 0.45))
+                            }
                     }
                     .padding()
                 }
@@ -50,11 +55,12 @@ struct FullGameView: View {
 }
 struct GameTile: View {
     let title: String
+    let color: Color
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(red: 1.0, green: 0.8, blue: 0.4))
+                .fill(color)
                 .frame(height: 120)
             Text(title)
                 .font(.custom("PressStart2P-Regular", size: 17))
