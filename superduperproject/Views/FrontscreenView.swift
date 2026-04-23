@@ -67,8 +67,8 @@ struct FrontscreenView: View {
                     NavigationLink {
                         FullGameView(userViewModel: userViewModel)
                     } label: {
-                        Text("TAP TO\nEARN MONEY")
-                            .font(.custom("PressStart2P-Regular", size: 12))
+                        Text("GAMES")
+                            .font(.custom("PressStart2P-Regular", size: 20))
                             .multilineTextAlignment(.center)
                             .frame(width: 175, height: 175)
                             .background(Color(red: 0.6, green: 1.0, blue: 0.6))
