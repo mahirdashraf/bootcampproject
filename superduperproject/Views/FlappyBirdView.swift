@@ -27,8 +27,8 @@ struct FlappyBirdView: View {
     let pipeWidth: CGFloat = 60
     let gapSize: CGFloat = 160
 
-    let gravity: CGFloat = 0.6
-    let jumpStrength: CGFloat = -8
+    let gravity: CGFloat = 0.4
+    let jumpStrength: CGFloat = -6
     let pipeSpeed: CGFloat = 3
 
     var body: some View {

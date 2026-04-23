@@ -21,7 +21,7 @@ struct GameCatalog {
             id: "spiderverse_box",
             name: "Spiderverse Box",
             universe: .spiderverse,
-            cost: 50,
+            cost: 500,
             possibleDropItemIDs: ["miles", "gwen", "peter", "jessica"],
             perDropWeights: nil,
             boxImageName: "spidermanbox"
@@ -30,7 +30,7 @@ struct GameCatalog {
             id: "hellokittyverse_box",
             name: "Hello Kittyverse Box",
             universe: .hellokittyverse,
-            cost: 30,
+            cost: 400,
             possibleDropItemIDs: ["keroppi", "chococat", "hellokitty", "kuromi"],
             perDropWeights: nil,
             boxImageName: "hkbox"
@@ -39,7 +39,7 @@ struct GameCatalog {
             id: "marioverse_box",
             name: "Marioverse Box",
             universe: .marioverse,
-            cost: 40,
+            cost: 300,
             possibleDropItemIDs: ["peach", "mario", "luigi", "toad"],
             perDropWeights: nil,
             boxImageName: "mariobox"

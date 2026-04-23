@@ -11,6 +11,7 @@ import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var user: FirebaseAuth.User?
+    @Published var errorMessage: String? = nil
     private var authListener: AuthStateDidChangeListenerHandle?
     
     init() {
@@ -22,17 +23,23 @@ class AuthViewModel: ObservableObject {
     }
     
     func signIn(email: String, password: String) {
+        errorMessage = nil
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
-            if let error = error {
-                print(error.localizedDescription)
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }
     }
 
     func signUp(email: String, password: String) {
+        errorMessage = nil
         Auth.auth().createUser(withEmail: email, password: password) { _, error in
-            if let error = error {
-                print(error.localizedDescription)
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }
     }

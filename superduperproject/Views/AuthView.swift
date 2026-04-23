@@ -95,6 +95,44 @@ struct AuthView: View {
                     .padding(.horizontal, 40)
                     Spacer()
                 }
+                if let error = auth.errorMessage {
+                    ZStack {
+                        Color.black.opacity(0.6)
+                            .ignoresSafeArea()
+                        
+                        VStack(spacing: 15) {
+                            Text("SIGN IN FAILED")
+                                .font(.custom("PressStart2P-Regular", size: 12))
+                                .foregroundColor(.white)
+                            
+                            Text(error)
+                                .font(.custom("PressStart2P-Regular", size: 12))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                            
+                            Button {
+                                auth.errorMessage = nil
+                            } label: {
+                                Text("OK")
+                                    .font(.custom("PressStart2P-Regular", size: 10))
+                                    .padding(.horizontal, 30)
+                                    .padding(.vertical, 8)
+                                    .background(Color.white)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                        .padding(20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.black)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.white, lineWidth: 2)
+                        )
+                        .padding(40)
+                    }
+                }
             }
         }
     }
